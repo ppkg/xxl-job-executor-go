@@ -120,6 +120,7 @@ func (e *executor) runTask(writer http.ResponseWriter, request *http.Request) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 	req, _ := ioutil.ReadAll(request.Body)
+	e.log.Info("任务参数:%v", string(req))
 	param := &RunReq{}
 	err := json.Unmarshal(req, &param)
 	if err != nil {
@@ -127,7 +128,6 @@ func (e *executor) runTask(writer http.ResponseWriter, request *http.Request) {
 		e.log.Error("参数解析错误:" + string(req))
 		return
 	}
-	e.log.Info("任务参数:%v", param)
 	if !e.regList.Exists(param.ExecutorHandler) {
 		_, _ = writer.Write(returnCall(param, 500, "Task not registered"))
 		e.log.Error("任务[" + Int64ToStr(param.JobID) + "]没有注册:" + param.ExecutorHandler)
@@ -275,7 +275,6 @@ func (e *executor) registry() {
 				e.log.Error("执行器注册失败3:" + string(body))
 				return
 			}
-			e.log.Info("执行器注册成功:" + string(body))
 		}()
 
 	}
@@ -300,7 +299,7 @@ func (e *executor) registryRemove() {
 		e.log.Error("执行器摘除失败:" + err.Error())
 		return
 	}
-	body, err := ioutil.ReadAll(res.Body)
+	body, _ := ioutil.ReadAll(res.Body)
 	e.log.Info("执行器摘除成功:" + string(body))
 	_ = res.Body.Close()
 }
