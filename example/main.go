@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	xxl "github.com/xxl-job/xxl-job-executor-go"
-	"github.com/xxl-job/xxl-job-executor-go/example/task"
 	"log"
+
+	xxl "github.com/ppkg/xxl-job-executor-go"
+	"github.com/ppkg/xxl-job-executor-go/example/task"
 )
 
 func main() {
